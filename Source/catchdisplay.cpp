@@ -17,9 +17,26 @@ namespace {
     const int dis_max_B = 100;
     const int const_catch = 256;
     const int const_sample = 128;
-    bool vis[const_catch][const_catch];
+    const int Diff = 70;
+    const int const_s=60;
+
+    const int min_catch_size=3;
+
+    const int min_V=200;
+    const int Hred01=60;
+    const int Hred02=300;
+    const double min_S=0.2;
+    Colour sample[const_catch][const_catch];
+    bool visit[const_catch][const_catch];
+    Colour average_colour;
 
     int dsize, w, h;
+    const Vec2i sspacev[sspace_size]=
+            {{0,-5},{-1,-4},{0,-4},{1,-4},{-2,-3},{-1,-3},{0,-3},{1,-3},{2,-3},{-3,-2},{-2,-2},{-1,-2},
+             {0,-2},{1,-2},{2,-2},{3,-2},{-4,-1},{-3,-1},{-2,-1},{-1,-1},{0,-1},{1,-1},{2,-1},{3,-1},
+             {4,-1},{-5,0},{-4,0},{-3,0},{-2,0},{-1,0},{1,0},{2,0},{3,0},{4,0},{5,0},{-4,1},{-3,1},
+             {-2,1},{-1,1},{0,1},{1,1},{2,1},{3,1},{4,1},{-3,2},{-2,2},{-1,2},{0,2},{1,2},{2,2},{3,2},
+             {-2,3},{-1,3},{0,3},{1,3},{2,3},{-1,4},{0,4},{1,4},{0,5}};
 
     struct Rect {
         Vec2i min;
@@ -44,7 +61,9 @@ namespace {
             auto view = input.begin<cv::Vec3b>();
             for (auto&& x : _masked) {
                 auto pixel = *(view++);
-                x = static_cast<uchar>((R(pixel)>thres_min_R && G(pixel)<thres_max_G && B(pixel)<thres_max_B) * 255);
+                Colour c;
+                c.set(R(pixel),G(pixel),B(pixel));
+                x = static_cast<uchar>(((!different_colour(c,average_colour))) * 255);
             }
             dsize = std::max(input.rows, input.cols)/const_catch+1;
             auto scale = 1.0 / dsize;
@@ -55,34 +74,27 @@ namespace {
 
         std::pair<Rect, bool> extract_digit_rect(const Vec2i& base_point) {
             static constexpr int threshold = 20;
-            int possible_point_count = 0;
+            Colour total_colour;
+            int total=1;
             Rect ret{base_point, base_point};
             std::deque<Vec2i> q{base_point};
             while (!q.empty()) {
                 auto u = q.front();
                 q.pop_front();
-                ++possible_point_count;
-                for (int k = 0; k<12; k++) {
-                    int vx = u.x+sdirx[k];
-                    int vy = u.y+sdiry[k];
-                    if (in_sample(vx, vy) && !vis[vx][vy] && _scaled(vy, vx)) {
-                        vis[vx][vy] = true;
-                        ret.min = {std::min(ret.min.x, vx), std::min(ret.min.y, vy)};
-                        ret.max = {std::max(ret.max.x, vx), std::max(ret.max.y, vy)};
-                        q.emplace_back(vx, vy);
-                    }
-                }
-                if (q.empty()) {
-                    for (int y = ret.min.y; y<ret.max.y; y++)
-                        for (int x = ret.min.x; x<ret.max.x; x++)
-                            if (!vis[x][y]) {
-                                vis[x][y] = true;
-                                if (_scaled(y, x))
-                                    q.emplace_back(x, y);
-                            }
+                for(int k=0;k<sspace_size;k++){
+                    auto v=u+sspacev[k];
+                    if(!in_sample(v)||visit[v.x][v.y]||!_scaled(v.y, v.x))continue;
+                    visit[v.x][v.y]=true;
+                    ret.min = {std::min(ret.min.x, v.x), std::min(ret.min.y, v.y)};
+                    ret.max = {std::max(ret.max.x, v.x), std::max(ret.max.y, v.y)};
+                    q.emplace_back(v.x,v.y);
+                    simple_add(total_colour,sample[v.x][v.y]);
+                    ++total;
+                    get_average_colour(average_colour,total_colour,total);
                 }
             }
-            return {ret, possible_point_count>threshold};
+            bool success = total>min_catch_size&&is_red(get_HSV(average_colour));
+            return {ret, success};
         }
 
         bool evaluate_background_is_dark(const Rect& rect) {
@@ -103,8 +115,68 @@ namespace {
             s->input_image(compressed);
         }
 
+        bool different_colour(Colour A,Colour B)
+        {
+            return A.R>B.R+Diff||A.R<B.R-Diff||A.G>B.G+Diff||A.G<B.G-Diff||A.B>B.B+Diff||A.B<B.B-Diff;
+        }
+        void simple_add(Colour &A,Colour B)
+        {
+            A.R+=B.R;
+            A.G+=B.G;
+            A.B+=B.B;
+        }
+        void get_average_colour(Colour &A,Colour total,int n)
+        {
+            A.R=total.R/n;
+            A.G=total.G/n;
+            A.B=total.B/n;
+        }
+        bool is_red(HSV A)
+        {
+            return (A.H<Hred01||A.H>Hred02)&&A.V>min_V&&A.S>min_S;
+        }
+        bool point_is_red(int i,int j)
+        {
+            return is_red(get_HSV(sample[i][j]));
+        }
+
+        void cover_colour(int x,int y,Colour &average_colour,Vec2i &top_left,Vec2i &bottom_right,int &catch_size)
+        {
+            Colour total_colour;
+            int total=1;
+            //average colour = total colour / total
+            Vec2i u(x,y),v;
+            visit[x][y]=true;
+            queue<Vec2i >q;
+            top_left.x=x;
+            top_left.y=y;
+            bottom_right.x=x;
+            bottom_right.y=y;
+            q.push(u);
+            total_colour=average_colour=sample[x][y];
+            catch_size=0;
+            while(!q.empty()){
+                u=q.front();
+                q.pop();
+                ++catch_size;
+                if(u.x<top_left.x)top_left.x=u.x;
+                if(u.y<top_left.y)top_left.y=u.y;
+                if(u.x>bottom_right.x)bottom_right.x=u.x;
+                if(u.y>bottom_right.y)bottom_right.y=u.y;
+                for(int k=0;k<sspace_size;k++){
+                    v=u+sspacev[k];
+                    if(!in_sample(v)||visit[v.x][v.y]||different_colour(average_colour,sample[v.x][v.y]))continue;
+                    q.push(v);
+                    visit[v.x][v.y]=true;
+                    simple_add(total_colour,sample[v.x][v.y]);
+                    ++total;
+                    get_average_colour(average_colour,total_colour,total);
+                }
+            }
+        }
+
         bool get_sample(const Vec2i& base_point, Img_segment7* s) {
-            vis[base_point.x][base_point.y] = true;
+            visit[base_point.x][base_point.y] = true;
             // try to get the largest sample area
             Rect area {{0,0}, {0,0}};
             auto&&[rect, success] = extract_digit_rect(base_point);
@@ -116,9 +188,12 @@ namespace {
             return true;
         }
 
-        bool test_sample_centre(int x, int y) noexcept { return !vis[x][y] && _scaled(y, x); }
+        bool test_sample_centre(int x, int y) noexcept { return !visit[x][y] && _scaled(y, x); }
 
         bool in_sample(int x, int y) noexcept { return x>=0 && x<_scaled.cols && y>=0 && y<_scaled.rows; }
+
+        bool in_sample(Vec2i a) noexcept { return a.x>=0 && a.x<_scaled.cols && a.y>=0 && a.y<_scaled.rows; }
+
         const cv::Mat& _input;
         cv::Mat1b _masked, _scaled;
     };
@@ -126,18 +201,19 @@ namespace {
 }
 
 cv::Mat ProcessFrame(const cv::Mat& input) {
-    memset(vis, 0, sizeof(vis));
+    memset(visit, 0, sizeof(visit));
     Img_segment7 s{};
     selector select {input};
     s.init();
     for (int j = 0; j<h; j++)
-        for (int i = 0; i<w; i++)
-            if (select.test_sample_centre(i, j)) {
+        for (int i = 0; i<w; i++) {
+            if (select.point_is_red(i,j)) {
                 if (select.get_sample({i, j}, &s)) {
                     s.cv05_identify();
                     std::cout << s.get_result() << std::endl;
                     return s.img;
                 }
             }
+        }
     return select._scaled;// cv::Mat1b(1, 1);
 }

@@ -53,6 +53,7 @@ union Vec<2, T> final {
     constexpr bool operator<=(const Vec& r) const noexcept { return lengthSqr()<=r.lengthSqr(); }
     constexpr bool operator>=(const Vec& r) const noexcept { return lengthSqr()>=r.lengthSqr(); }
     constexpr T dot(const Vec& r) const noexcept { return x*r.x+y*r.y; }
+    //Vec& make_vec(T x_,T y_) noexcept { x=x_;y=y_;return *this;}
     T length() noexcept { return sqrt(lengthSqr()); }
     template <class T2>
     operator Vec<2, T2>() noexcept { return Vec<2, T2>(T2(x), T2(y)); }
