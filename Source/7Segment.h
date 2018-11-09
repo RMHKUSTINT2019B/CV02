@@ -63,8 +63,16 @@ namespace {
             width = matrix.cols;
             img = std::move(matrix);
         }
-        
-       void cv05_identify()
+        void output_little_display() {
+            if (display[0])std::cout << " - \n"; else std::cout << "   \n";
+            if (display[1])std::cout << "| "; else std::cout << "  ";
+            if (display[2])std::cout << "|\n"; else std::cout << " \n";
+            if (display[3])std::cout << " - \n"; else std::cout << "   \n";
+            if (display[4])std::cout << "| "; else std::cout << "  ";
+            if (display[5])std::cout << "|\n"; else std::cout << " \n";
+            if (display[6])std::cout << " - \n"; else std::cout << "   \n";
+        }
+            void cv05_identify()
        {
             Block_init();
             Segment_identify();

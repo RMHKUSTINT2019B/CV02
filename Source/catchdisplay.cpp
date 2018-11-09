@@ -210,6 +210,7 @@ cv::Mat ProcessFrame(const cv::Mat& input) {
             if (select.point_is_red(i,j)) {
                 if (select.get_sample({i, j}, &s)) {
                     s.cv05_identify();
+                    s.output_little_display();
                     std::cout << s.get_result() << std::endl;
                     return s.img;
                 }

@@ -66,7 +66,7 @@ pl_vector operator-(pl_vector a,pl_vector b)
 	c.y=a.y-b.y;
 	return c;
 }
-pl_vector operator-=(pl_vector &a,pl_vector b)
+void operator-=(pl_vector &a,pl_vector b)
 {
 	a.x-=b.x;
 	a.y-=b.y;
