@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <utility>
 #include <type_traits>
+
 template <size_t d, class T>
 union Vec;
 

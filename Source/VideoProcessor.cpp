@@ -66,9 +66,9 @@ std::future<void> VideoProcessor::run() {
     shouldStop = false;
     // Fork-off a thread to do actual work
     return std::async(std::launch::async, [this]() {
-        Mat frame, output;
         std::mutex mt; // idle mutex
         while (!shouldStop) {
+            Mat frame, output;
             if (!camera->getNextFrame(frame) || (frameToStop >= 0 && getFrameNumber() == frameToStop))
                 break;
 
