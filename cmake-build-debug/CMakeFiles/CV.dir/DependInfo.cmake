@@ -9,7 +9,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/kashunshum/Documents/Github/CV/Source/FrameProcessor.cpp" "/Users/kashunshum/Documents/Github/CV/cmake-build-debug/CMakeFiles/CV.dir/Source/FrameProcessor.cpp.o"
   "/Users/kashunshum/Documents/Github/CV/Source/HAL/USB.cpp" "/Users/kashunshum/Documents/Github/CV/cmake-build-debug/CMakeFiles/CV.dir/Source/HAL/USB.cpp.o"
   "/Users/kashunshum/Documents/Github/CV/Source/VideoProcessor.cpp" "/Users/kashunshum/Documents/Github/CV/cmake-build-debug/CMakeFiles/CV.dir/Source/VideoProcessor.cpp.o"
-  "/Users/kashunshum/Documents/Github/CV/Source/catchdisplay.cpp" "/Users/kashunshum/Documents/Github/CV/cmake-build-debug/CMakeFiles/CV.dir/Source/catchdisplay.cpp.o"
   "/Users/kashunshum/Documents/Github/CV/Source/main.cpp" "/Users/kashunshum/Documents/Github/CV/cmake-build-debug/CMakeFiles/CV.dir/Source/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")

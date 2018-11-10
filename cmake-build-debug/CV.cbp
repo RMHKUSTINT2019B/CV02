@@ -82,9 +82,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/7Segment.h">
-			<Option target="CV"/>
-		</Unit>
 		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/Camera.cpp">
 			<Option target="CV"/>
 		</Unit>
@@ -115,13 +112,16 @@
 		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/Math/Vector.h">
 			<Option target="CV"/>
 		</Unit>
+		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/New.h">
+			<Option target="CV"/>
+		</Unit>
 		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/VideoProcessor.cpp">
 			<Option target="CV"/>
 		</Unit>
 		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/VideoProcessor.h">
 			<Option target="CV"/>
 		</Unit>
-		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/catchdisplay.cpp">
+		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/cv_basic.h">
 			<Option target="CV"/>
 		</Unit>
 		<Unit filename="/Users/kashunshum/Documents/Github/CV/Source/main.cpp">

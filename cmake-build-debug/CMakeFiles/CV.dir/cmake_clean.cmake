@@ -4,7 +4,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/CV.dir/Source/FrameProcessor.cpp.o"
   "CMakeFiles/CV.dir/Source/HAL/USB.cpp.o"
   "CMakeFiles/CV.dir/Source/VideoProcessor.cpp.o"
-  "CMakeFiles/CV.dir/Source/catchdisplay.cpp.o"
   "CMakeFiles/CV.dir/Source/main.cpp.o"
   "CV.pdb"
   "CV"

@@ -7,6 +7,8 @@
 #include "FrameProcessor.h"
 #include "HAL/USB.h"
 #include "HAL/SerialBus.h"
+#include "New.h"
+
 cv::Mat ProcessFrame(const cv::Mat& input);
 bool is_interesting(libusb_device* pDevice);
 int main() {
@@ -16,11 +18,12 @@ int main() {
 
     // 分别为输入和输出
     processor.displayInput("Input ");
-    processor.displayOutput("Output ");
+    //processor.displayOutput("Output ");
 
     processor.setDelay(1000. / processor.getFrameRate());
 
-    processor.setFrameProcessor(ProcessFrame);
+    processor.setFrameProcessor(Tubeidentify);
+
     // 开始帧处理过程
     auto task = processor.run();
     waitKey();

@@ -258,33 +258,6 @@ Source/VideoProcessor.cpp.s:
 	$(MAKE) -f CMakeFiles/CV.dir/build.make CMakeFiles/CV.dir/Source/VideoProcessor.cpp.s
 .PHONY : Source/VideoProcessor.cpp.s
 
-Source/catchdisplay.o: Source/catchdisplay.cpp.o
-
-.PHONY : Source/catchdisplay.o
-
-# target to build an object file
-Source/catchdisplay.cpp.o:
-	$(MAKE) -f CMakeFiles/CV.dir/build.make CMakeFiles/CV.dir/Source/catchdisplay.cpp.o
-.PHONY : Source/catchdisplay.cpp.o
-
-Source/catchdisplay.i: Source/catchdisplay.cpp.i
-
-.PHONY : Source/catchdisplay.i
-
-# target to preprocess a source file
-Source/catchdisplay.cpp.i:
-	$(MAKE) -f CMakeFiles/CV.dir/build.make CMakeFiles/CV.dir/Source/catchdisplay.cpp.i
-.PHONY : Source/catchdisplay.cpp.i
-
-Source/catchdisplay.s: Source/catchdisplay.cpp.s
-
-.PHONY : Source/catchdisplay.s
-
-# target to generate assembly for a file
-Source/catchdisplay.cpp.s:
-	$(MAKE) -f CMakeFiles/CV.dir/build.make CMakeFiles/CV.dir/Source/catchdisplay.cpp.s
-.PHONY : Source/catchdisplay.cpp.s
-
 Source/main.o: Source/main.cpp.o
 
 .PHONY : Source/main.o
@@ -336,9 +309,6 @@ help:
 	@echo "... Source/VideoProcessor.o"
 	@echo "... Source/VideoProcessor.i"
 	@echo "... Source/VideoProcessor.s"
-	@echo "... Source/catchdisplay.o"
-	@echo "... Source/catchdisplay.i"
-	@echo "... Source/catchdisplay.s"
 	@echo "... Source/main.o"
 	@echo "... Source/main.i"
 	@echo "... Source/main.s"
